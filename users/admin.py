@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 from django.utils.html import format_html
 
-from .models import MyUser, UserBloodDonate
+from .models import MyUser, UserBloodDonate, BloodNeeded
 from .forms import UserChangeForm, UserCreationForm
 
 
@@ -181,3 +181,5 @@ class UserBloodDonateAdmin(admin.ModelAdmin):
 
 
 # admin.site.register(UserBloodDonate, UserBloodDonateAdmin)
+
+admin.site.register(BloodNeeded)

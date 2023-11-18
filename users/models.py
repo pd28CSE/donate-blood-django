@@ -1,9 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.html import mark_safe
-from datetime import datetime, timedelta
 
+# from datetime import datetime, timedelta
+
+from .utils.fields import BloodGroups
 from .manager import MyUserManager
+
+
+class UserDeviceToken(models.Model):
+    user = models.OneToOneField(
+        "MyUser",
+        unique=True,
+        on_delete=models.CASCADE,
+        related_name="device",
+    )
+    device_token = models.UUIDField(max_length=255, blank=False, null=False)
+
+    def __str__(self):
+        return self.user.email
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
@@ -165,4 +180,39 @@ class UserBloodDonate(models.Model):
         verbose_name_plural = "Blood Donation List"
 
     def __str__(self):
-        return self.blood_donner.email
+        return "{} ==> {}".format(
+            self.blood_donner.email,
+            self.blood_recipients.email,
+        )
+
+
+class BloodNeeded(models.Model):
+    blood_recipients = models.ForeignKey(
+        MyUser,
+        on_delete=models.CASCADE,
+        related_name="blood_needs",
+    )
+    blood_group = models.CharField(
+        choices=BloodGroups.choices,
+        max_length=5,
+    )
+    place = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+    )
+    coordinates = models.JSONField(blank=True, null=True)
+    date_time = models.DateTimeField(blank=False, null=False)
+    hospital_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return "{} needs {}".format(
+            self.blood_recipients.email,
+            self.blood_group,
+        )
