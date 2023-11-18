@@ -6,9 +6,10 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import permissions
 from datetime import datetime, timedelta
 
-from ..models import MyUser, UserBloodDonate
+from ..models import MyUser, BloodNeeded, UserBloodDonate
 from .serializers import (
     MyUserModelSerializer,
+    BloodNeededModelSerializer,
     UserBloodDonateAddSerializer,
     UserBloodDonateSerializer,
 )
@@ -59,12 +60,17 @@ class UserProfileUpdateAPIView(UpdateAPIView):
     serializer_class = MyUserModelSerializer
 
 
+class BloodNeededListAPIView(ListAPIView):
+    queryset = BloodNeeded.objects.all().order_by("-id")
+    serializer_class = BloodNeededModelSerializer
+
+
 class BloodDonnerDonateListView(ListAPIView):
     serializer_class = UserBloodDonateSerializer
 
     def get_queryset(self):
         queryset = UserBloodDonate.objects.filter(
-            bloodDonner__email=self.kwargs["email"]
+            blood_donner__email=self.kwargs["email"]
         ).order_by("-donateDate")
         return queryset
 

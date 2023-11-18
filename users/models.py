@@ -4,7 +4,7 @@ from django.utils.html import mark_safe
 
 from datetime import datetime
 
-from .utils import fields
+from .utils import fields, helper
 from .manager import MyUserManager
 
 
@@ -172,13 +172,19 @@ class BloodNeeded(models.Model):
     blood_group = models.CharField(
         choices=fields.BloodGroups.choices,
         max_length=5,
+        blank=False,
+        null=False,
     )
     place = models.CharField(
         max_length=255,
         blank=False,
         null=False,
     )
-    coordinates = models.JSONField(blank=True, null=True)
+    coordinates = models.JSONField(
+        blank=True,
+        null=True,
+        default=helper.get_coordinates,
+    )
     date_time = models.DateTimeField(blank=False, null=False)
     hospital_name = models.CharField(
         max_length=255,

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from datetime import timedelta
 
-from ..models import MyUser, UserBloodDonate
+from ..models import MyUser, BloodNeeded, UserBloodDonate
 
 
 class MyUserModelSerializer(serializers.ModelSerializer):
@@ -107,6 +107,19 @@ class MyUserModelSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+class BloodNeededModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BloodNeeded
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["blood_recipients"] = MyUserModelSerializer(
+            instance=instance.blood_recipients
+        ).data
+        return representation
 
 
 class UserBloodDonateAddSerializer(serializers.ModelSerializer):

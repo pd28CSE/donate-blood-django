@@ -8,6 +8,7 @@ urlpatterns = [
     path("login/", AuthTokenView.obtain_auth_token),
     path("donner-list/", views.BloodDonnerListAPIView.as_view()),
     path("user/<str:email>/update/", views.UserProfileUpdateAPIView.as_view()),
+    path("blood-needed-list/", views.BloodNeededListAPIView.as_view()),
     path("blood-donate-add/", views.UserBloodDonateAPIView.as_view()),
     path(
         "donner-list/<str:email>/donation-list/",
