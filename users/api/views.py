@@ -39,8 +39,8 @@ class BloodDonnerListAPIView(ListAPIView):
         Q(bmi__gte=17.0)
         & Q(max_age__gte=datetime.today().year)
         & Q(
-            Q(gender="M") & Q(date_of_birth__lte=get_minimum_year())
-            | Q(gender="F") & Q(date_of_birth__lte=get_minimum_year())
+            Q(gender="Male") & Q(date_of_birth__lte=get_minimum_year())
+            | Q(gender="Female") & Q(date_of_birth__lte=get_minimum_year())
         )
     )
     serializer_class = MyUserModelSerializer

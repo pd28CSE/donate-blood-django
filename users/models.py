@@ -34,10 +34,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         null=False,
     )
     gender = models.CharField(
-        max_length=2,
+        max_length=7,
         choices=[
-            ("M", "Male"),
-            ("F", "Female"),
+            ("Male", "Male"),
+            ("Female", "Female"),
         ],
     )
     date_of_birth = models.DateField(help_text="YYYY-MM-DD formate.")
@@ -66,7 +66,11 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         blank=False,
         null=False,
     )
-    image = models.ImageField(upload_to="profile-pictures")
+    image = models.ImageField(
+        upload_to="profile-pictures",
+        blank=True,
+        null=True,
+    )
 
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)

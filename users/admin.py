@@ -18,9 +18,11 @@ class UserAdmin(BaseUserAdmin):
     def profile_picture(self, obj):
         if not obj.image:
             return format_html('<img src="" alt="No Image" width="50%" />')
-        return format_html('<img src="{}" width="50%" />'.format(obj.image.url))
+        return format_html(
+            '<img src="{}" width="50%" />'.format(obj.image.url),
+        )
 
-    # rename the column name
+    # rename the profile_picture column name on admin panel
     profile_picture.short_description = "Profile Picture View"
 
     def get_name(self, obj):
@@ -59,7 +61,7 @@ class UserAdmin(BaseUserAdmin):
             },
         ),
         (
-            "Personal info",
+            "Personal Information",
             {
                 "classes": [
                     "collapse"
@@ -93,11 +95,25 @@ class UserAdmin(BaseUserAdmin):
                 ]
             },
         ),
-        ("Important dates", {"fields": ["last_login", "next_donation_remaining_days"]}),
+        (
+            "Important Dates",
+            {
+                "fields": [
+                    "last_login",
+                    "next_donation_remaining_days",
+                ],
+            },
+        ),
     ]
-    readonly_fields = ["profile_picture", "next_donation_remaining_days"]
-    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
-    # overrides get_fieldsets to use this attribute when creating a user.
+    readonly_fields = [
+        "profile_picture",
+        "next_donation_remaining_days",
+    ]
+    """
+    add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
+    overrides get_fieldsets to use this attribute when creating
+    a user using admin panel.
+    """
     add_fieldsets = [
         (
             None,
@@ -158,6 +174,9 @@ class UserBloodDonateAdmin(admin.ModelAdmin):
     list_filter = [
         "blood_donner",
         "blood_recipients",
+    ]
+    search_fields = [
+        "blood_donner",
     ]
 
 
