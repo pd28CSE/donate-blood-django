@@ -10,3 +10,8 @@ class BloodGroups(models.TextChoices):
     ON = ("O-", "O RhD Negative")
     ABP = ("AB+", "AB RhD Positive")
     ABN = ("AB-", "AB RhD Negative")
+
+
+class Status(models.TextChoices):
+    PENDING = ("Pending", "Pending")
+    APPROVED = ("Approved", "Approved")

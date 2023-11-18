@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.html import mark_safe
 
-# from datetime import datetime, timedelta
+from datetime import datetime
 
-from .utils.fields import BloodGroups
+from .utils import fields
 from .manager import MyUserManager
 
 
@@ -161,39 +161,16 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = "Users"
 
 
-class UserBloodDonate(models.Model):
-    blood_recipients = models.ForeignKey(
-        MyUser,
-        on_delete=models.CASCADE,
-        related_name="recipients",
-    )
-    blood_donner = models.ForeignKey(
-        MyUser,
-        on_delete=models.CASCADE,
-        related_name="donners",
-    )
-    place = models.CharField(max_length=200, blank=False, null=False)
-    donate_date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name = "Blood Donation List"
-        verbose_name_plural = "Blood Donation List"
-
-    def __str__(self):
-        return "{} ==> {}".format(
-            self.blood_donner.email,
-            self.blood_recipients.email,
-        )
-
-
 class BloodNeeded(models.Model):
     blood_recipients = models.ForeignKey(
         MyUser,
+        blank=False,
+        null=False,
         on_delete=models.CASCADE,
         related_name="blood_needs",
     )
     blood_group = models.CharField(
-        choices=BloodGroups.choices,
+        choices=fields.BloodGroups.choices,
         max_length=5,
     )
     place = models.CharField(
@@ -211,8 +188,42 @@ class BloodNeeded(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = "Blood Needed"
+        verbose_name_plural = "Blood Needs"
+
     def __str__(self) -> str:
         return "{} needs {}".format(
             self.blood_recipients.email,
             self.blood_group,
+        )
+
+
+class UserBloodDonate(models.Model):
+    blood_recipients = models.ForeignKey(
+        BloodNeeded,
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+        related_name="user_blood_donates",
+    )
+    blood_donner = models.ForeignKey(
+        MyUser,
+        blank=False,
+        null=False,
+        on_delete=models.CASCADE,
+        related_name="user_blood_donates",
+    )
+    is_approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Blood Donation List"
+        verbose_name_plural = "Blood Donation List"
+
+    def __str__(self):
+        return "{} ==> {}".format(
+            self.blood_donner.email,
+            self.blood_recipients.blood_recipients.email,
         )

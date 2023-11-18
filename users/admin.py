@@ -164,16 +164,17 @@ class UserBloodDonateAdmin(admin.ModelAdmin):
     list_display = [
         "blood_donner",
         "blood_recipients",
-        "place",
+        "is_approved",
     ]
     fields = [
         "blood_donner",
         "blood_recipients",
-        "place",
+        "is_approved",
     ]
     list_filter = [
         "blood_donner",
         "blood_recipients",
+        "is_approved",
     ]
     search_fields = [
         "blood_donner",
