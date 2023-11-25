@@ -14,4 +14,9 @@ urlpatterns = [
         "donner-list/<str:email>/donation-list/",
         views.BloodDonnerDonateListView.as_view(),
     ),
+    path("blood-need-create/", views.BloodNeededCreateAPIView.as_view()),
+    path(
+        "blood-need-update/<int:id>/",
+        views.BloodNeededUpdateAPIView.as_view(),
+    ),
 ]

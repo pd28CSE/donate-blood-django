@@ -61,6 +61,18 @@ class UserProfileUpdateAPIView(UpdateAPIView):
 
 
 class BloodNeededListAPIView(ListAPIView):
+    queryset = BloodNeeded.objects.filter(is_visible=True).order_by("-id")
+    serializer_class = BloodNeededModelSerializer
+
+
+class BloodNeededCreateAPIView(CreateAPIView):
+    queryset = BloodNeeded.objects.all().order_by("-id")
+    serializer_class = BloodNeededModelSerializer
+
+
+class BloodNeededUpdateAPIView(UpdateAPIView):
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
     queryset = BloodNeeded.objects.all().order_by("-id")
     serializer_class = BloodNeededModelSerializer
 

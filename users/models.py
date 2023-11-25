@@ -163,6 +163,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
 
 class BloodNeeded(models.Model):
+    is_visible = models.BooleanField(default=False)
     description = models.CharField(
         max_length=255,
         blank=False,
