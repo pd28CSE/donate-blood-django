@@ -128,26 +128,36 @@ class UserBloodDonateAddSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class MinimalUserBloodDonateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserBloodDonate
+        fields = "__all__"
+
+
 class MinimalBloodNeededModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = BloodNeeded
         fields = "__all__"
 
 
-class MinimalUserBloodDonateSerializer(serializers.ModelSerializer):
-    # blood_donner = MinimalMyUserModelSerializer()
-
-    class Meta:
-        model = UserBloodDonate
-        fields = "__all__"
-
-
 class UserBloodDonateSerializer(serializers.ModelSerializer):
-    # blood_recipients = MinimalBloodNeededModelSerializer(read_only=True)
+    blood_donner = MinimalMyUserModelSerializer()
 
     class Meta:
         model = UserBloodDonate
         fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        if isinstance(instance.blood_recipients, BloodNeeded):
+            representation["blood_recipients"] = MinimalBloodNeededModelSerializer(
+                instance=instance.blood_recipients,
+            ).data
+        # if isinstance(instance.blood_donner, MyUser):
+        #     representation["blood_donner"] = MinimalMyUserModelSerializer(
+        #         instance=instance.blood_donner,
+        #     ).data
+        return representation
 
 
 class BloodNeededModelSerializer(MinimalBloodNeededModelSerializer):
