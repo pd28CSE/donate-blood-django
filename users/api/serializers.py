@@ -1,7 +1,13 @@
 from rest_framework import serializers
 from datetime import timedelta
 
-from ..models import MyUser, BloodNeeded, UserBloodDonate
+from ..models import MyUser, BloodNeeded, UserBloodDonate, UserDeviceToken
+
+
+class UserDeviceTokenModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserDeviceToken
+        fields = "__all__"
 
 
 class MinimalMyUserModelSerializer(serializers.ModelSerializer):

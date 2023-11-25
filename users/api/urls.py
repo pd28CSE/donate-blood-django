@@ -19,4 +19,5 @@ urlpatterns = [
         "blood-need-update/<int:id>/",
         views.BloodNeededUpdateAPIView.as_view(),
     ),
+    path("user-device-token/", views.DeviceTokenAPIView.as_view()),
 ]

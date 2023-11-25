@@ -1,17 +1,19 @@
 from django.db.models import Q
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import permissions
 from datetime import datetime, timedelta
-
-from ..models import MyUser, BloodNeeded, UserBloodDonate
+from django.shortcuts import get_object_or_404
+from ..models import MyUser, BloodNeeded, UserBloodDonate, UserDeviceToken
 from .serializers import (
     MyUserModelSerializer,
     BloodNeededModelSerializer,
     UserBloodDonateAddSerializer,
     UserBloodDonateSerializer,
+    UserDeviceTokenModelSerializer,
 )
 from .permissions.permissions import IsOwner
 
@@ -155,3 +157,54 @@ class UserBloodDonateAPIView(CreateAPIView):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+
+
+class DeviceTokenAPIView(APIView):
+    serializer_class = UserDeviceTokenModelSerializer
+    model = UserDeviceToken
+    authentication_classes = [
+        TokenAuthentication,
+    ]
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+
+    def get_device_token(self, user):
+        return get_object_or_404(self.model, user=user)
+
+    def get(self, request, *args, **kwargs):
+        user_device_token = self.get_device_token(request.user)
+        serializer = self.serializer_class(instance=user_device_token).data
+        return Response(serializer, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data={
+                "device_token": request.data.get("device_token"),
+                "user": request.user.pk,
+            },
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    def patch(self, request, *args, **kwargs):
+        user_device_token = self.get_device_token(request.user)
+        serializer = self.serializer_class(
+            instance=user_device_token,
+            data=request.data,
+            partial=True,
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )

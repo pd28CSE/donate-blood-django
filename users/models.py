@@ -15,7 +15,7 @@ class UserDeviceToken(models.Model):
         on_delete=models.CASCADE,
         related_name="device",
     )
-    device_token = models.UUIDField(max_length=255, blank=False, null=False)
+    device_token = models.CharField(max_length=255, blank=False, null=False)
 
     def __str__(self):
         return self.user.email
