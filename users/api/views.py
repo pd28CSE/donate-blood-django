@@ -71,7 +71,7 @@ class BloodDonnerDonateListView(ListAPIView):
     def get_queryset(self):
         queryset = UserBloodDonate.objects.filter(
             blood_donner__email=self.kwargs["email"]
-        ).order_by("-donateDate")
+        ).order_by("-id")
         return queryset
 
 

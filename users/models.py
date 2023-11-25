@@ -175,6 +175,7 @@ class BloodNeeded(models.Model):
         on_delete=models.CASCADE,
         related_name="blood_needs",
     )
+    # ? blood_group, this is not necessary.
     blood_group = models.CharField(
         choices=fields.BloodGroups.choices,
         max_length=5,
@@ -217,7 +218,7 @@ class UserBloodDonate(models.Model):
         on_delete=models.CASCADE,
         blank=False,
         null=False,
-        related_name="user_blood_donates",
+        related_name="user_blood_donate",
     )
     blood_donner = models.ForeignKey(
         MyUser,
