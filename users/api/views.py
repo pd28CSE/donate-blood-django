@@ -13,6 +13,7 @@ from .serializers import (
     UserBloodDonateAddSerializer,
     UserBloodDonateSerializer,
 )
+from .permissions.permissions import IsOwner
 
 
 class CreateUserApiView(CreateAPIView):
@@ -71,6 +72,13 @@ class BloodNeededCreateAPIView(CreateAPIView):
 
 
 class BloodNeededUpdateAPIView(UpdateAPIView):
+    authentication_classes = [
+        TokenAuthentication,
+    ]
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwner,
+    ]
     lookup_field = "id"
     lookup_url_kwarg = "id"
     queryset = BloodNeeded.objects.all().order_by("-id")
