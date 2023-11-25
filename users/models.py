@@ -87,6 +87,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         null=True,
     )
 
+    is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -162,6 +163,11 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
 
 class BloodNeeded(models.Model):
+    description = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+    )
     blood_recipients = models.ForeignKey(
         MyUser,
         blank=False,
