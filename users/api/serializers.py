@@ -174,6 +174,7 @@ class BloodNeededModelSerializer(MinimalBloodNeededModelSerializer):
         representation = super().to_representation(instance)
         if isinstance(instance.blood_recipients, MyUser):
             representation["blood_recipients"] = MinimalMyUserModelSerializer(
-                instance=instance.blood_recipients
+                instance=instance.blood_recipients,
+                context={"request": self.context["request"]},
             ).data
         return representation

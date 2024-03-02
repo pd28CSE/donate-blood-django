@@ -1,11 +1,9 @@
 from django.urls import path
 from rest_framework.authtoken import views as AuthTokenView
-from drf_spectacular.views import SpectacularAPIView
 
 from . import views
 
 urlpatterns = [
-    path("", SpectacularAPIView.as_view(), name="schema"),
     path("create-user/", views.CreateUserApiView.as_view()),
     path("login/", AuthTokenView.obtain_auth_token),
     path("donner-list/", views.BloodDonnerListAPIView.as_view()),
